@@ -175,6 +175,12 @@ function openInvitation() {
     heroCard.classList.add("is-open");
     envelope.setAttribute("aria-expanded", "true");
 
+    // Desbloquear audio del navegador: persiste toda la sesión
+    try {
+        const _ac = new (window.AudioContext || window.webkitAudioContext)();
+        _ac.resume().then(() => _ac.close()).catch(() => {});
+    } catch (e) {}
+
     // Inicia música AQUÍ: ya hay gesto del usuario → autoplay con sonido garantizado
     startYTPlayer();
 
