@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Francy &amp; Andres | Invitacion Nupcial</title>
+    <meta name="description" content="Invitacion nupcial de Francy Lizeth Perez Ortiz y Andres Francisco Villamizar Rangel.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=20260417a">
+</head>
+<body>
+
+    <div class="video-overlay" id="videoOverlay" aria-hidden="true">
+        <video id="introVideo" preload="auto" playsinline webkit-playsinline autoplay muted></video>
+    </div>
+
+    <div class="sky-glow sky-glow-left"></div>
+    <div class="sky-glow sky-glow-right"></div>
+    <div class="petals" id="petals"></div>
+    <div class="butterflies" id="butterflies" aria-hidden="true"></div>
+
+    <main class="page-shell">
+        <section class="hero-card" id="heroCard">
+
+            <p class="guest-greeting" id="guestGreeting"></p>
+
+            <p class="eyebrow">Tienen el honor de invitarle a su ceremonia de bodas</p>
+
+            <h1>
+                <span class="bride-name">Francy Lizeth Perez Ortiz</span>
+                <span class="ampersand">&amp;</span>
+                <span class="groom-name">Andres Francisco Villamizar Rangel</span>
+            </h1>
+
+            <p class="intro">
+                Con el corazon lleno de amor y gratitud queremos compartir contigo el inicio de
+                nuestra historia juntos. Haz clic en el sobre para descubrir nuestra invitacion especial.
+            </p>
+
+            <div class="envelope-stage">
+                <button class="envelope" id="envelope" type="button" aria-expanded="false" aria-controls="invitationContent">
+                    <span class="envelope-back"></span>
+                    <span class="envelope-letter">
+                        <span class="seal">27 &middot; 06 &middot; 26</span>
+                        <span class="letter-title">Abrir invitacion</span>
+                    </span>
+                    <span class="envelope-flap"></span>
+                    <span class="envelope-front"></span>
+                </button>
+            </div>
+
+            <button class="music-toggle" id="musicToggle" type="button" aria-pressed="false">
+                &#9835; Activar melodia
+            </button>
+        </section>
+
+        <section class="invitation-panel" id="invitationContent" aria-live="polite">
+            <div class="panel-inner">
+
+                <div class="nos-casamos-wrap">
+                    <p class="nos-casamos" aria-label="Nos casamos">
+                        <span>N</span><span>o</span><span>s</span>
+                        <span class="space">&nbsp;</span>
+                        <span>C</span><span>a</span><span>s</span><span>a</span><span>m</span><span>o</span><span>s</span>
+                    </p>
+                </div>
+
+                <h2>27 de junio de 2026</h2>
+                <p class="location">&#10022;&nbsp; Tame, Arauca &nbsp;&#10022;</p>
+                <p class="location-note">Lugar exacto de la ceremonia: muy pronto lo revelaremos</p>
+
+                <div class="divider-floral">&#10024; &#10041; &#10024;</div>
+
+                <div class="detail-grid">
+                    <article>
+                        <div class="card-icon">&#128149;</div>
+                        <h3>Ceremonia</h3>
+                        <p>Una tarde para celebrar el amor, la familia y el inicio de un nuevo hogar lleno de bendiciones.</p>
+                    </article>
+                    <article>
+                        <div class="card-icon">&#127941;</div>
+                        <h3>Fiesta y celebracion</h3>
+                        <p>Bailaremos, reiremos y brindaremos juntos por esta nueva etapa que tanto hemos sonado.</p>
+                    </article>
+                    <article>
+                        <div class="card-icon">&#128197;</div>
+                        <h3>Reserva la fecha</h3>
+                        <p>Guarda este dia especial en tu corazon. Tu presencia es el mejor regalo que podemos recibir.</p>
+                    </article>
+                </div>
+
+                <blockquote>
+                    <span class="quote-mark">&#10077;</span>
+                    El amor no consiste en mirarse el uno al otro,
+                    sino en mirar juntos en la misma direccion.
+                    <span class="quote-mark">&#10078;</span>
+                </blockquote>
+
+                <div class="rsvp-box">
+                    <p class="rsvp-icon">&#128140;</p>
+                    <h3 class="rsvp-title">Confirmar asistencia</h3>
+                    <p class="rsvp-text">
+                        Por favor confirma tu asistencia a mas tardar el
+                        <strong>15 de junio de 2026</strong>.
+                        Tu presencia hara este dia aun mas especial.
+                    </p>
+                    <a class="rsvp-btn"
+                       href="https://wa.me/573177802463?text=Hola%2C%20confirmo%20mi%20asistencia%20a%20la%20boda%20de%20Francy%20y%20Andres%20el%2027%20de%20junio%20de%202026"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        Confirmar por WhatsApp
+                    </a>
+                </div>
+
+                <p class="closing">Con amor eterno, Francy &amp; Andres</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js?v=20260417a"></script>
+</body>
+</html>
