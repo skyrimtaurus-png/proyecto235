@@ -175,6 +175,18 @@ function openInvitation() {
     heroCard.classList.add("is-open");
     envelope.setAttribute("aria-expanded", "true");
 
+    // Activa el sonido tras el primer gesto del usuario
+    if (ytPlayer && typeof ytPlayer.unMute === "function") {
+        ytPlayer.unMute();
+        ytPlayer.setVolume(60);
+        ytMuted = false;
+        if (ytMuteBtn) {
+            ytMuteBtn.textContent = "\u{1F3B5}";
+            ytMuteBtn.setAttribute("aria-label", "Silenciar música");
+            ytMuteBtn.classList.remove("muted");
+        }
+    }
+
     // Oculta el texto introductorio con fade
     const intro = document.querySelector(".intro");
     if (intro) {
@@ -252,12 +264,20 @@ function onYouTubeIframeAPIReady() {
             modestbranding: 1,
             rel: 0,
             loop: 1,
-            playlist: videoId
+            playlist: videoId,
+            mute: 1
         },
         events: {
             onReady: function(e) {
                 e.target.setVolume(60);
                 e.target.playVideo();
+                // Inicia silenciado; se activa en openInvitation()
+                ytMuted = true;
+                if (ytMuteBtn) {
+                    ytMuteBtn.textContent = "\u{1F507}";
+                    ytMuteBtn.setAttribute("aria-label", "Activar música");
+                    ytMuteBtn.classList.add("muted");
+                }
             }
         }
     });
