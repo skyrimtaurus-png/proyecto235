@@ -114,13 +114,7 @@ const envelope = document.getElementById("envelope");
 const invitationContent = document.getElementById("invitationContent");
 const butterfliesContainer = document.getElementById("butterflies");
 const petalsContainer = document.getElementById("petals");
-const musicToggle = document.getElementById("musicToggle");
 const guestGreeting = document.getElementById("guestGreeting");
-
-let audioContext;
-let audioMasterGain;
-let musicPlaying = false;
-let oscillators = [];
 
 // Nombre personalizado por URL parameter: ?para=Nombre
 function applyGuestName() {
@@ -175,76 +169,7 @@ function createPetals() {
     }
 }
 
-function stopMusic() {
-    oscillators.forEach(({ oscillator, gainNode, lfo }) => {
-        gainNode.gain.cancelScheduledValues(audioContext.currentTime);
-        gainNode.gain.linearRampToValueAtTime(0.0001, audioContext.currentTime + 0.6);
-        oscillator.stop(audioContext.currentTime + 0.7);
-        lfo.stop(audioContext.currentTime + 0.7);
-    });
 
-    oscillators = [];
-    musicPlaying = false;
-    musicToggle.textContent = "Activar melodia";
-    musicToggle.setAttribute("aria-pressed", "false");
-}
-
-function playMusic() {
-    if (!audioContext) {
-        audioContext = new window.AudioContext();
-        audioMasterGain = audioContext.createGain();
-        audioMasterGain.gain.value = 0.08;
-        audioMasterGain.connect(audioContext.destination);
-    }
-
-    if (audioContext.state === "suspended") {
-        audioContext.resume();
-    }
-
-    const notes = [261.63, 329.63, 392.0, 523.25];
-    const now = audioContext.currentTime;
-
-    oscillators = notes.map((frequency, index) => {
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-        const lfo = audioContext.createOscillator();
-        const lfoGain = audioContext.createGain();
-
-        oscillator.type = index % 2 === 0 ? "sine" : "triangle";
-        oscillator.frequency.setValueAtTime(frequency, now);
-
-        gainNode.gain.setValueAtTime(0.0001, now);
-        gainNode.gain.linearRampToValueAtTime(0.05 / (index + 1), now + 1.6);
-
-        lfo.type = "sine";
-        lfo.frequency.value = 0.12 + index * 0.03;
-        lfoGain.gain.value = 8 + index * 1.5;
-
-        lfo.connect(lfoGain);
-        lfoGain.connect(oscillator.frequency);
-
-        oscillator.connect(gainNode);
-        gainNode.connect(audioMasterGain);
-
-        oscillator.start(now + index * 0.08);
-        lfo.start(now + index * 0.08);
-
-        return { oscillator, gainNode, lfo };
-    });
-
-    musicPlaying = true;
-    musicToggle.textContent = "Silenciar melodia";
-    musicToggle.setAttribute("aria-pressed", "true");
-}
-
-function toggleMusic() {
-    if (musicPlaying) {
-        stopMusic();
-        return;
-    }
-
-    playMusic();
-}
 
 function openInvitation() {
     heroCard.classList.add("is-open");
@@ -261,9 +186,6 @@ function openInvitation() {
         invitationContent.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 360);
 
-    if (!musicPlaying) {
-        playMusic();
-    }
 }
 
 function initScrollReveal() {
@@ -300,7 +222,6 @@ function initScrollReveal() {
     document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
 }
 
-musicToggle.addEventListener("click", toggleMusic);
 envelope.addEventListener("click", openInvitation, { once: true });
 
 applyGuestName();
