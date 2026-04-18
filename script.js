@@ -239,10 +239,8 @@ const YT_VIDEOS = [
 ];
 
 let ytPlayer = null;
-let ytMuted = false;
 let ytApiReady = false;
 let ytStartPending = false;
-const ytMuteBtn = document.getElementById("ytMuteBtn");
 
 // La API llama esta función cuando está lista
 function onYouTubeIframeAPIReady() {
@@ -280,14 +278,8 @@ function _createYTPlayer() {
         },
         events: {
             onReady: function(e) {
-                e.target.setVolume(60);
+                e.target.setVolume(100);
                 e.target.playVideo();
-                ytMuted = false;
-                if (ytMuteBtn) {
-                    ytMuteBtn.textContent = "\u{1F3B5}";
-                    ytMuteBtn.setAttribute("aria-label", "Silenciar música");
-                    ytMuteBtn.classList.remove("muted");
-                }
             },
             onStateChange: function(e) {
                 // Estado 1 = playing: quitar spinner
@@ -317,28 +309,8 @@ function ytNextSong() {
     ytCurrentId = newId;
     // loadVideoById como string es más fiable entre navegadores
     ytPlayer.loadVideoById(newId);
-    ytPlayer.setVolume(60);
-    if (ytMuted) { ytPlayer.mute(); } else { ytPlayer.unMute(); }
+    ytPlayer.setVolume(100);
     // El spinner se quita en onStateChange cuando el estado pasa a PLAYING
-}
-
-if (ytMuteBtn) {
-    ytMuteBtn.addEventListener("click", function() {
-        if (!ytPlayer || typeof ytPlayer.mute !== "function") return;
-        if (ytMuted) {
-            ytPlayer.unMute();
-            ytMuted = false;
-            ytMuteBtn.textContent = "\u{1F3B5}";
-            ytMuteBtn.setAttribute("aria-label", "Silenciar música");
-            ytMuteBtn.classList.remove("muted");
-        } else {
-            ytPlayer.mute();
-            ytMuted = true;
-            ytMuteBtn.textContent = "\u{1F507}";
-            ytMuteBtn.setAttribute("aria-label", "Activar música");
-            ytMuteBtn.classList.add("muted");
-        }
-    });
 }
 
 const ytNextBtn = document.getElementById("ytNextBtn");
