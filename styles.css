@@ -349,6 +349,49 @@ h1::after {
     pointer-events: none;
 }
 
+/* ── YOUTUBE PLAYER OCULTO ── */
+#yt-player-wrap {
+    position: fixed;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* ── BOTÓN FLOTANTE MUTE ── */
+.yt-mute-btn {
+    position: fixed;
+    bottom: 1.4rem;
+    right: 1.4rem;
+    z-index: 9999;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid rgba(156, 175, 136, 0.40);
+    background: rgba(255, 255, 255, 0.80);
+    backdrop-filter: blur(10px);
+    font-size: 1.4rem;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(142, 91, 62, 0.18);
+    transition: transform 200ms ease, box-shadow 200ms ease, background 200ms ease;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.yt-mute-btn:hover {
+    transform: scale(1.12);
+    box-shadow: 0 10px 26px rgba(142, 91, 62, 0.28);
+}
+
+.yt-mute-btn.muted {
+    background: rgba(232, 216, 196, 0.85);
+    border-color: rgba(142, 91, 62, 0.35);
+}
+
 /* ── ZONA DEL SOBRE (fondo Arena) ── */
 .envelope-stage {
     position: relative;

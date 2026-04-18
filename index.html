@@ -8,13 +8,19 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20260417b">
+    <link rel="stylesheet" href="styles.css?v=20260417c">
+    <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
 
     <div class="video-overlay" id="videoOverlay" aria-hidden="true">
         <video id="introVideo" preload="auto" playsinline webkit-playsinline autoplay muted></video>
     </div>
+
+    <!-- Reproductor YouTube oculto -->
+    <div id="yt-player-wrap" aria-hidden="true"><div id="yt-player"></div></div>
+    <!-- Botón flotante mute/unmute -->
+    <button class="yt-mute-btn" id="ytMuteBtn" type="button" aria-label="Silenciar música" title="Silenciar música">&#127925;</button>
 
     <div class="sky-glow sky-glow-left"></div>
     <div class="sky-glow sky-glow-right"></div>

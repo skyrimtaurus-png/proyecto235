@@ -224,6 +224,61 @@ function initScrollReveal() {
 
 envelope.addEventListener("click", openInvitation, { once: true });
 
+// --- YouTube música aleatoria ---
+const YT_VIDEOS = [
+    "e5bUY_e2V4U",
+    "Fa36CaBfONo",
+    "RXZzJi2svyg",
+    "5-g2u3h2ocA"
+];
+
+let ytPlayer = null;
+let ytMuted = false;
+const ytMuteBtn = document.getElementById("ytMuteBtn");
+
+function onYouTubeIframeAPIReady() {
+    const videoId = YT_VIDEOS[Math.floor(Math.random() * YT_VIDEOS.length)];
+    ytPlayer = new YT.Player("yt-player", {
+        videoId: videoId,
+        playerVars: {
+            autoplay: 1,
+            controls: 0,
+            disablekb: 1,
+            fs: 0,
+            iv_load_policy: 3,
+            modestbranding: 1,
+            rel: 0,
+            loop: 1,
+            playlist: videoId
+        },
+        events: {
+            onReady: function(e) {
+                e.target.setVolume(60);
+                e.target.playVideo();
+            }
+        }
+    });
+}
+
+if (ytMuteBtn) {
+    ytMuteBtn.addEventListener("click", function() {
+        if (!ytPlayer || typeof ytPlayer.mute !== "function") return;
+        if (ytMuted) {
+            ytPlayer.unMute();
+            ytMuted = false;
+            ytMuteBtn.textContent = "\u{1F3B5}";
+            ytMuteBtn.setAttribute("aria-label", "Silenciar música");
+            ytMuteBtn.classList.remove("muted");
+        } else {
+            ytPlayer.mute();
+            ytMuted = true;
+            ytMuteBtn.textContent = "\u{1F507}";
+            ytMuteBtn.setAttribute("aria-label", "Activar música");
+            ytMuteBtn.classList.add("muted");
+        }
+    });
+}
+
 applyGuestName();
 createButterflies();
 createPetals();
