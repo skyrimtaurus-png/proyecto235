@@ -263,10 +263,12 @@ function startYTPlayer() {
     }
 }
 
+let ytCurrentId = null;
+
 function _createYTPlayer() {
-    const videoId = YT_VIDEOS[Math.floor(Math.random() * YT_VIDEOS.length)];
+    ytCurrentId = YT_VIDEOS[Math.floor(Math.random() * YT_VIDEOS.length)];
     ytPlayer = new YT.Player("yt-player", {
-        videoId: videoId,
+        videoId: ytCurrentId,
         playerVars: {
             autoplay: 1,
             controls: 0,
@@ -276,7 +278,7 @@ function _createYTPlayer() {
             modestbranding: 1,
             rel: 0,
             loop: 1,
-            playlist: videoId
+            playlist: ytCurrentId
         },
         events: {
             onReady: function(e) {
@@ -291,6 +293,29 @@ function _createYTPlayer() {
             }
         }
     });
+}
+
+function ytNextSong() {
+    if (!ytPlayer || typeof ytPlayer.loadVideoById !== "function") return;
+    // Elige una canción diferente a la actual
+    let newId;
+    do {
+        newId = YT_VIDEOS[Math.floor(Math.random() * YT_VIDEOS.length)];
+    } while (newId === ytCurrentId && YT_VIDEOS.length > 1);
+    ytCurrentId = newId;
+    ytPlayer.loadVideoById({ videoId: newId, suggestedQuality: "small" });
+    ytPlayer.setVolume(60);
+    if (ytMuted) {
+        ytPlayer.mute();
+    } else {
+        ytPlayer.unMute();
+    }
+    // Feedback visual: parpadeo del botón
+    const btn = document.getElementById("ytNextBtn");
+    if (btn) {
+        btn.classList.add("loading");
+        setTimeout(() => btn.classList.remove("loading"), 900);
+    }
 }
 
 if (ytMuteBtn) {
@@ -310,6 +335,11 @@ if (ytMuteBtn) {
             ytMuteBtn.classList.add("muted");
         }
     });
+}
+
+const ytNextBtn = document.getElementById("ytNextBtn");
+if (ytNextBtn) {
+    ytNextBtn.addEventListener("click", ytNextSong);
 }
 
 applyGuestName();

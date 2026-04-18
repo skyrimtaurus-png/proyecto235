@@ -386,6 +386,18 @@ h1::after {
     margin: 0;
     box-shadow: 0 4px 14px rgba(142,91,62,0.13);
     max-width: 160px;
+    cursor: pointer;
+    transition: background 200ms ease, transform 150ms ease;
+}
+
+.yt-hint:hover {
+    background: rgba(232,216,196,0.92);
+    transform: scale(1.03);
+}
+
+.yt-hint.loading {
+    opacity: 0.6;
+    transform: scale(0.97);
 }
 
 .yt-hint span {
