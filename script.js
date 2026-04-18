@@ -181,8 +181,15 @@ function openInvitation() {
         _ac.resume().then(() => _ac.close()).catch(() => {});
     } catch (e) {}
 
-    // Inicia música AQUÍ: ya hay gesto del usuario → autoplay con sonido garantizado
-    startYTPlayer();
+    // Desmuteamos aquí: el player ya está creado y esperando
+    if (ytPlayer && typeof ytPlayer.unMute === "function") {
+        ytPlayer.unMute();
+        ytPlayer.setVolume(100);
+        ytPlayer.playVideo();
+    } else {
+        // El player aún no estaba listo; marcamos para desmutearlo en onReady
+        ytUnmuteOnReady = true;
+    }
 
     // Oculta el texto introductorio con fade
     const intro = document.querySelector(".intro");
@@ -245,55 +252,41 @@ const YT_VIDEOS = [
 ];
 
 let ytPlayer = null;
-let ytApiReady = false;
-let ytStartPending = false;
-
-// La API llama esta función cuando está lista
-function onYouTubeIframeAPIReady() {
-    ytApiReady = true;
-    if (ytStartPending) {
-        ytStartPending = false;
-        _createYTPlayer();
-    }
-}
-
-// Llamar desde openInvitation() — ya hay gesto de usuario
-function startYTPlayer() {
-    if (ytPlayer) return; // ya iniciado
-    if (ytApiReady) {
-        _createYTPlayer();
-    } else {
-        ytStartPending = true; // esperamos a que cargue la API
-    }
-}
-
 let ytCurrentId = null;
+let ytUnmuteOnReady = false;
 
-function _createYTPlayer() {
+// La API llama esta función cuando está lista — siempre creamos el player muted
+// (autoplay muted siempre está permitido por los navegadores)
+function onYouTubeIframeAPIReady() {
     ytCurrentId = YT_VIDEOS[Math.floor(Math.random() * YT_VIDEOS.length)];
     ytPlayer = new YT.Player("yt-player", {
         videoId: ytCurrentId,
         playerVars: {
             autoplay: 1,
+            mute: 1,
             controls: 0,
             disablekb: 1,
             fs: 0,
             iv_load_policy: 3,
             modestbranding: 1,
-            rel: 0
+            rel: 0,
+            playsinline: 1
         },
         events: {
             onReady: function(e) {
                 e.target.setVolume(100);
                 e.target.playVideo();
+                // Si el usuario ya abrió el sobre mientras cargaba, desmutear ahora
+                if (ytUnmuteOnReady) {
+                    e.target.unMute();
+                    ytUnmuteOnReady = false;
+                }
             },
             onStateChange: function(e) {
-                // Estado 1 = playing: quitar spinner
                 if (e.data === YT.PlayerState.PLAYING) {
                     const btn = document.getElementById("ytNextBtn");
                     if (btn) btn.classList.remove("loading");
                 }
-                // Estado 0 = ended: reiniciar la misma canción (loop manual)
                 if (e.data === YT.PlayerState.ENDED) {
                     e.target.playVideo();
                 }
@@ -303,20 +296,24 @@ function _createYTPlayer() {
 }
 
 function ytNextSong() {
-    if (!ytPlayer || typeof ytPlayer.loadVideoById !== "function") return;
-    // Mostrar spinner inmediatamente
     const btn = document.getElementById("ytNextBtn");
+    // Guardianes: player no creado, o no tiene el método
+    if (!ytPlayer || typeof ytPlayer.getPlayerState !== "function") return;
+    const state = ytPlayer.getPlayerState();
+    // -1 = no iniciado, 3 = en buffer: esperamos
+    if (state === -1) return;
+
+    // Mostrar spinner
     if (btn) btn.classList.add("loading");
-    // Elegir canción diferente a la actual
+
     let newId;
     do {
         newId = YT_VIDEOS[Math.floor(Math.random() * YT_VIDEOS.length)];
     } while (newId === ytCurrentId && YT_VIDEOS.length > 1);
     ytCurrentId = newId;
-    // loadVideoById como string es más fiable entre navegadores
     ytPlayer.loadVideoById(newId);
     ytPlayer.setVolume(100);
-    // El spinner se quita en onStateChange cuando el estado pasa a PLAYING
+    ytPlayer.unMute();
 }
 
 const ytNextBtn = document.getElementById("ytNextBtn");

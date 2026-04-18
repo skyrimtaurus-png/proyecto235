@@ -297,21 +297,32 @@ h1::after {
 .groom-name {
     display: block;
     font-size: clamp(2.4rem, 5.5vw, 4.4rem);
-    background: linear-gradient(
-        135deg,
-        #c9a84c 0%,
-        #f0d070 25%,
-        #a07828 45%,
-        #f0d070 65%,
-        #c9a84c 80%,
-        #88621a 100%
-    );
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: shimmerGold 4s linear infinite, fadeSlideDown 1.2s ease both;
+    /* Fallback para navegadores sin soporte background-clip:text (Samsung, algunos Android) */
+    color: #c9a84c;
     filter: drop-shadow(0 2px 8px rgba(201, 168, 76, 0.38));
+    animation: fadeSlideDown 1.2s ease both;
+}
+
+/* Shimmer dorado solo si el navegador lo soporta */
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+    .bride-name,
+    .groom-name {
+        background: linear-gradient(
+            135deg,
+            #c9a84c 0%,
+            #f0d070 25%,
+            #a07828 45%,
+            #f0d070 65%,
+            #c9a84c 80%,
+            #88621a 100%
+        );
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+        animation: shimmerGold 4s linear infinite, fadeSlideDown 1.2s ease both;
+    }
 }
 
 .groom-name {
