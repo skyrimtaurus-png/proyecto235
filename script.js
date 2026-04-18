@@ -229,7 +229,10 @@ const YT_VIDEOS = [
     "e5bUY_e2V4U",
     "Fa36CaBfONo",
     "RXZzJi2svyg",
-    "5-g2u3h2ocA"
+    "5-g2u3h2ocA",
+    "Kh4lsws7GGE",
+    "1DC6VKZ1QLc",
+    "CKH9Qy3FDCY"
 ];
 
 let ytPlayer = null;
