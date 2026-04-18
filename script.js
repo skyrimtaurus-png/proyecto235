@@ -276,9 +276,7 @@ function _createYTPlayer() {
             fs: 0,
             iv_load_policy: 3,
             modestbranding: 1,
-            rel: 0,
-            loop: 1,
-            playlist: ytCurrentId
+            rel: 0
         },
         events: {
             onReady: function(e) {
@@ -290,6 +288,17 @@ function _createYTPlayer() {
                     ytMuteBtn.setAttribute("aria-label", "Silenciar música");
                     ytMuteBtn.classList.remove("muted");
                 }
+            },
+            onStateChange: function(e) {
+                // Estado 1 = playing: quitar spinner
+                if (e.data === YT.PlayerState.PLAYING) {
+                    const btn = document.getElementById("ytNextBtn");
+                    if (btn) btn.classList.remove("loading");
+                }
+                // Estado 0 = ended: reiniciar la misma canción (loop manual)
+                if (e.data === YT.PlayerState.ENDED) {
+                    e.target.playVideo();
+                }
             }
         }
     });
@@ -297,25 +306,20 @@ function _createYTPlayer() {
 
 function ytNextSong() {
     if (!ytPlayer || typeof ytPlayer.loadVideoById !== "function") return;
-    // Elige una canción diferente a la actual
+    // Mostrar spinner inmediatamente
+    const btn = document.getElementById("ytNextBtn");
+    if (btn) btn.classList.add("loading");
+    // Elegir canción diferente a la actual
     let newId;
     do {
         newId = YT_VIDEOS[Math.floor(Math.random() * YT_VIDEOS.length)];
     } while (newId === ytCurrentId && YT_VIDEOS.length > 1);
     ytCurrentId = newId;
-    ytPlayer.loadVideoById({ videoId: newId, suggestedQuality: "small" });
+    // loadVideoById como string es más fiable entre navegadores
+    ytPlayer.loadVideoById(newId);
     ytPlayer.setVolume(60);
-    if (ytMuted) {
-        ytPlayer.mute();
-    } else {
-        ytPlayer.unMute();
-    }
-    // Feedback visual: parpadeo del botón
-    const btn = document.getElementById("ytNextBtn");
-    if (btn) {
-        btn.classList.add("loading");
-        setTimeout(() => btn.classList.remove("loading"), 900);
-    }
+    if (ytMuted) { ytPlayer.mute(); } else { ytPlayer.unMute(); }
+    // El spinner se quita en onStateChange cuando el estado pasa a PLAYING
 }
 
 if (ytMuteBtn) {

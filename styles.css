@@ -396,8 +396,26 @@ h1::after {
 }
 
 .yt-hint.loading {
-    opacity: 0.6;
-    transform: scale(0.97);
+    opacity: 0.75;
+    pointer-events: none;
+    position: relative;
+}
+
+.yt-hint.loading::after {
+    content: "";
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(142,91,62,0.25);
+    border-top-color: var(--terracota);
+    border-radius: 50%;
+    animation: ytSpin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-left: 5px;
+}
+
+@keyframes ytSpin {
+    to { transform: rotate(360deg); }
 }
 
 .yt-hint span {
