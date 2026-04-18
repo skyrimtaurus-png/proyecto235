@@ -175,17 +175,8 @@ function openInvitation() {
     heroCard.classList.add("is-open");
     envelope.setAttribute("aria-expanded", "true");
 
-    // Activa el sonido tras el primer gesto del usuario
-    if (ytPlayer && typeof ytPlayer.unMute === "function") {
-        ytPlayer.unMute();
-        ytPlayer.setVolume(60);
-        ytMuted = false;
-        if (ytMuteBtn) {
-            ytMuteBtn.textContent = "\u{1F3B5}";
-            ytMuteBtn.setAttribute("aria-label", "Silenciar música");
-            ytMuteBtn.classList.remove("muted");
-        }
-    }
+    // Inicia música AQUÍ: ya hay gesto del usuario → autoplay con sonido garantizado
+    startYTPlayer();
 
     // Oculta el texto introductorio con fade
     const intro = document.querySelector(".intro");
@@ -249,9 +240,30 @@ const YT_VIDEOS = [
 
 let ytPlayer = null;
 let ytMuted = false;
+let ytApiReady = false;
+let ytStartPending = false;
 const ytMuteBtn = document.getElementById("ytMuteBtn");
 
+// La API llama esta función cuando está lista
 function onYouTubeIframeAPIReady() {
+    ytApiReady = true;
+    if (ytStartPending) {
+        ytStartPending = false;
+        _createYTPlayer();
+    }
+}
+
+// Llamar desde openInvitation() — ya hay gesto de usuario
+function startYTPlayer() {
+    if (ytPlayer) return; // ya iniciado
+    if (ytApiReady) {
+        _createYTPlayer();
+    } else {
+        ytStartPending = true; // esperamos a que cargue la API
+    }
+}
+
+function _createYTPlayer() {
     const videoId = YT_VIDEOS[Math.floor(Math.random() * YT_VIDEOS.length)];
     ytPlayer = new YT.Player("yt-player", {
         videoId: videoId,
@@ -264,19 +276,17 @@ function onYouTubeIframeAPIReady() {
             modestbranding: 1,
             rel: 0,
             loop: 1,
-            playlist: videoId,
-            mute: 1
+            playlist: videoId
         },
         events: {
             onReady: function(e) {
                 e.target.setVolume(60);
                 e.target.playVideo();
-                // Inicia silenciado; se activa en openInvitation()
-                ytMuted = true;
+                ytMuted = false;
                 if (ytMuteBtn) {
-                    ytMuteBtn.textContent = "\u{1F507}";
-                    ytMuteBtn.setAttribute("aria-label", "Activar música");
-                    ytMuteBtn.classList.add("muted");
+                    ytMuteBtn.textContent = "\u{1F3B5}";
+                    ytMuteBtn.setAttribute("aria-label", "Silenciar música");
+                    ytMuteBtn.classList.remove("muted");
                 }
             }
         }
